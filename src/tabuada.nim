@@ -4,7 +4,7 @@
 import std/random, std/strformat, std/strbasics
 
 proc start = 
-  echo("Type q to stop")
+  echo("Type q to quit.")
   while true:
     randomize()
     var a = rand(2..9)
