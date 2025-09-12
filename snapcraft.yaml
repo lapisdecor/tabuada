@@ -1,0 +1,29 @@
+name: tabuada
+version: '1.0'
+summary: A terminal game that asks multiplication tables.
+description: |
+  You are asked answers to simple multiplications. To quit type 'q'.
+
+grade: stable
+confinement: strict
+base: core24
+
+apps:
+  tabuada:
+    command: bin/tabuada
+    plugs: [home]
+
+parts:
+  tabuada:
+    plugin: nil
+    source: .
+    build-packages:
+      - build-essential
+      - nim
+    stage-packages:
+      - libc6
+    override-build: |
+      set -eux
+      # Build your application
+      nim c -d:release --out:$SNAPCRAFT_PART_INSTALL/bin/tabuada src/tabuada.nim
+      chmod +x $SNAPCRAFT_PART_INSTALL/bin/tabuada
