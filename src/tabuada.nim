@@ -1,11 +1,9 @@
 # This is just a simple terminal game to test
 # your multiplication tables knowledge
 
-import std/random, std/strformat, std/strbasics
+import std/random, std/strformat, std/strbasics, std/files, std/paths, std/strutils, std/os
 
 proc start =
-  # TODO read hi-score file
-  #
   var points: int = 0
   var level: int = 1
   var stopGame: bool = false
@@ -13,7 +11,29 @@ proc start =
   var lastVal: int = 9
   var fails = 0
   var hiName = "Antrok"
-  var hiScore: int = 50
+  var hiScore: int = 20
+
+  var filename = "highscore.txt"
+  var content = hiName & "," &  $hiScore
+  let snapUserData = getEnv("SNAP_USER_DATA")
+  var pathToFile: Path
+
+  if snapUserData == "":
+    # We are not in a snap
+    pathToFile = filename.Path
+    if fileExists(pathToFile):
+      content = readFile(filename)
+  else:
+    pathToFile = snapUserData.Path / filename.Path
+    if fileExists(pathToFile):
+      content = readFile(pathToFile.string)
+
+  var splited = content.split(',')
+  hiName = splited[0]
+  hiScore = splited[1].parseInt
+
+
+
 
   echo("Type q to quit.")
   while stopGame == false:
@@ -56,11 +76,14 @@ proc start =
     strip(consoleInput)
     hiName = consoleInput
     hiScore = points
-  # TODO write to hi-score file
+    var textToWrite = hiName & "," & $hiScore
+    # write to hi-score file
+    writeFile(pathToFile.string, textToWrite)
 
 
   # TODO print high score
   echo("Best points by {hiName} with {hiScore} points!".fmt)
+
 
 
 when isMainModule:
