@@ -37,6 +37,8 @@ parts:
 
   tabuada:
     plugin: nil
+    after:
+      - nim-compiler
     source: .
     build-packages:
       - build-essential
