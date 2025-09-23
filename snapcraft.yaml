@@ -14,16 +14,39 @@ apps:
     plugs: [home]
 
 parts:
+  nim-compiler:
+    plugin: nil
+    source: https://github.com/nim-lang/Nim/archive/refs/tags/v2.2.4.tar.gz # Use latest version
+    source-type: tar
+    build-packages:
+      - build-essential
+      - tar
+      - git
+      - xz-utils
+    override-build: |
+      set -eux
+      cd $SNAPCRAFT_PART_SRC
+      ./build_all.sh
+      ./bin/nim c -d:release koch
+      ./koch boot -d:release
+      ./koch tools
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+      cp -r bin/* $SNAPCRAFT_PART_INSTALL/bin/
+      cp -r lib $SNAPCRAFT_PART_INSTALL/
+      cp -r config $SNAPCRAFT_PART_INSTALL/
+
   tabuada:
     plugin: nil
     source: .
     build-packages:
       - build-essential
-      - nim
     stage-packages:
       - libc6
     override-build: |
       set -eux
-      # Build your application
+      # Set up Nim path
+      export PATH=$SNAPCRAFT_STAGE/bin:$PATH
+      export NIM_LIB_PREFIX=$SNAPCRAFT_STAGE/lib
+      # Build the application
       nim c -d:release --out:$SNAPCRAFT_PART_INSTALL/bin/tabuada src/tabuada.nim
       chmod +x $SNAPCRAFT_PART_INSTALL/bin/tabuada
