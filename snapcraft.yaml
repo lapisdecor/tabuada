@@ -1,5 +1,5 @@
 name: tabuada
-version: "0.1.1"
+version: "0.1.2"
 summary: A terminal game that asks multiplication tables.
 description: |
   You are asked answers to simple multiplications. To quit type 'q'.

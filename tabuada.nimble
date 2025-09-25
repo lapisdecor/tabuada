@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.1.1"
+version       = "0.1.2"
 author        = "Luis Louro"
 description   = "A simple game to learn multiplication tables"
 license       = "MIT"
